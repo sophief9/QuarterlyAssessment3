@@ -58,8 +58,20 @@ def main():
         # Get the selected subject's table name
         selected_subject = subjects[subject_choice - 1][0]
 
+        # Display all questions in the selected table
+        cursor.execute(f"SELECT * FROM {selected_subject}")
+        questions = cursor.fetchall()
+
+        if questions:
+            print(f"\nQuestions in {selected_subject}:")
+            for q in questions:
+                print(f"ID: {q[0]}, Question: {q[1]}")
+        else:
+            print(f"No questions found in {selected_subject}.")
+            return
+
         # Get the question ID or text to delete
-        question_id_or_text = input(f"Enter the question ID or the full question text to delete from {selected_subject}: ")
+        question_id_or_text = input(f"\nEnter the question ID or the full question text to delete from {selected_subject}: ")
 
         # Call the delete function for the selected subject table
         delete_question_from_table(selected_subject, question_id_or_text)

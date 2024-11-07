@@ -42,6 +42,7 @@ class QuizApp:
             self.root.quit()
             return
 
+        # Create dropdown menu with a limit of 5 categories
         category_menu = ttk.Combobox(self.root, textvariable=self.selected_category, values=categories)
         category_menu.pack(pady=5)
         tk.Button(self.root, text="Start Quiz Now", command=self.start_quiz).pack(pady=20)
@@ -51,10 +52,13 @@ class QuizApp:
         try:
             cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
             tables = cursor.fetchall()
+            
+            # Extract categories, format them, and limit to the first 5
             categories = [
-                table[0].replace('_questions', '').title() for table in tables if table[0].endswith('_questions')
+                table[0].replace('_questions', '').replace('_', '').upper() 
+                for table in tables if table[0].endswith('_questions')
             ]
-            return categories
+            return categories[:5]  # Limit to only 5 categories
         except sqlite3.Error as e:
             messagebox.showerror("Error", f"Error fetching categories: {e}")
             return []

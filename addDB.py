@@ -1,3 +1,7 @@
+#this creates new tables and adds the questions to the tables.
+
+#if want a new table, use the code below to format and add questions
+
 import sqlite3
 
 # Connect to SQLite database (or create it if it doesn't exist)
@@ -85,6 +89,9 @@ for category, questions in sample_data.items():
     ''')
 
     # Insert the questions if the table is empty
+again = input("You already ran this... you sure you want to do this again? Yes/No")
+
+if again == "Yes":
     cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
     if cursor.fetchone()[0] == 0:
         for question in questions:

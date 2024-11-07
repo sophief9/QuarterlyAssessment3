@@ -20,7 +20,7 @@ sample_data = {
     ],
     "MKT3400": [
         ("What is marketing?", "Selling products", "Understanding customer needs", "Creating ads", "Designing logos", "B"),
-        ("What is the main goal of marketing?", "To sell products", "To build a brand", "To understand customer needs", "To create ads", "C"),
+        ("What is an example of direct marketing?", "TV Commericals", "Social Media ads", "Billboards", "Email campaigns", "D"),
         ("What are the 4 Ps of marketing?", "Product, Price, Promotion, Place", "People, Product, Price, Promotion", "Product, Price, Publicity, Place", "Price, Product, People, Promotion", "A"),
         ("What is market segmentation?", "Dividing the market into groups", "Targeting the whole market", "Advertising to everyone", "Selling at a higher price", "A"),
         ("What does branding refer to?", "A product's price", "A store's logo", "A product's identity", "The promotion method used", "C"),

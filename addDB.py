@@ -1,20 +1,16 @@
-#this creates new tables and adds the questions to the tables.
-
-#if want a new table, use the code below to format and add questions
-
 import sqlite3
 
 # Connect to SQLite database (or create it if it doesn't exist)
 conn = sqlite3.connect('quiz_bowl.db')
 cursor = conn.cursor()
 
-# Sample data (added new categories DS 4220, DS 3850, DS 3860)
+# Sample data with all 10 questions for each category
 sample_data = {
     "DS4210": [
-        ("What does BI stand for?", "Business Information", "Business Intelligence", "Basica Information", "Business Integration", "B"),
+        ("What does BI stand for?", "Business Information", "Business Intelligence", "Basic Information", "Business Integration", "B"),
         ("Which tool is commonly used for data visualization?", "SQL", "Power BI", "Java", "Python", "B"),
         ("What is a data warehouse?", "A place for storing web pages", "A large repository of historical data for analysis", "A type of database for managing transactions", "A tool for programming", "B"),
-        ("What does OLAP stand for?", "Online Analytical Processing", "Online Application Processing", "Online Access Processing", "Online Analytical Processing", "A"),
+        ("What does OLAP stand for?", "Online Analytical Processing", "Online Application Processing", "Online Access Processing", "Offline Analytical Processing", "A"),
         ("Which is the primary goal of ETL?", "Analyze data", "Visualize data", "Query data", "Extract, Transform, Load", "D"),
         ("Which of these is a typical BI data source?", "Transactional databases", "Text files", "Web scraping tools", "All of the above", "D"),
         ("What does data mining involve?", "Cleaning data", "Storing data", "Discovering patterns in data", "Backing up data", "C"),
@@ -24,7 +20,7 @@ sample_data = {
     ],
     "MKT3400": [
         ("What is marketing?", "Selling products", "Understanding customer needs", "Creating ads", "Designing logos", "B"),
-        ("What is an example of direct marketing?", "TV Commericals", "Social Media ads", "Billboards", "Email campaigns", "D"),
+        ("What is an example of direct marketing?", "TV Commercials", "Social Media ads", "Billboards", "Email campaigns", "D"),
         ("What are the 4 Ps of marketing?", "Product, Price, Promotion, Place", "People, Product, Price, Promotion", "Product, Price, Publicity, Place", "Price, Product, People, Promotion", "A"),
         ("What is market segmentation?", "Dividing the market into groups", "Targeting the whole market", "Advertising to everyone", "Selling at a higher price", "A"),
         ("What does branding refer to?", "A product's price", "A store's logo", "A product's identity", "The promotion method used", "C"),
@@ -50,8 +46,8 @@ sample_data = {
         ("What is the output of print(2 + 3 * 4)?", "14", "20", "12", "16", "A"),
         ("Which function is used to get the length of a list?", "size()", "len()", "length()", "count()", "B"),
         ("What does the 'def' keyword do in Python?", "Defines a class", "Defines a function", "Declares a variable", "Imports a module", "B"),
-        ("Which of the following is a mutable data type?", "Tuple", "String", "List", "String", "C"),
-        ("What does '== 'operator do in Python?", "Assigns a value", "Compares two values", "Adds two values", "Divides two values", "B"),
+        ("Which of the following is a mutable data type?", "Tuple", "String", "List", "Integer", "C"),
+        ("What does '==' operator do in Python?", "Assigns a value", "Compares two values", "Adds two values", "Divides two values", "B"),
         ("How do you create a dictionary in Python?", "{}", "[]", "()", "<>", "A"),
         ("Which of the following is not a valid variable name?", "_variable", "variable1", "2variable", "variable_two", "C"),
         ("Which Python function is used to read input from the user?", "read()", "input()", "scan()", "get_input()", "B"),
@@ -72,33 +68,40 @@ sample_data = {
     ],
 }
 
-# Insert sample data into each category table if empty
-for category, questions in sample_data.items():
-    table_name = category.lower().replace(' ', '_') + "_questions"  # Format the table name
-    
-    # Check if the table exists and create it if not
-    cursor.execute(f'''
-        CREATE TABLE IF NOT EXISTS {table_name} (
-            question_text TEXT,
-            option_a TEXT,
-            option_b TEXT,
-            option_c TEXT,
-            option_d TEXT,
-            correct_answer TEXT
-        )
-    ''')
+# Confirm from the user if they want to proceed
+again = input("You already ran this... are you sure you want to do this again? Yes/No: ")
 
-    # Insert the questions if the table is empty
-again = input("You already ran this... you sure you want to do this again? Yes/No")
+if again.lower() == "yes":
+    # Insert sample data into each category table if empty
+    for category, questions in sample_data.items():
+        table_name = category.lower().replace(' ', '_') + "_questions"  # Format the table name
+        
+        # Check if the table exists and create it if not
+        cursor.execute(f'''
+            CREATE TABLE IF NOT EXISTS {table_name} (
+                question_text TEXT,
+                option_a TEXT,
+                option_b TEXT,
+                option_c TEXT,
+                option_d TEXT,
+                correct_answer TEXT
+            )
+        ''')
 
-if again == "Yes":
-    cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
-    if cursor.fetchone()[0] == 0:
-        for question in questions:
-            cursor.execute(f'''
-            INSERT INTO {table_name} (question_text, option_a, option_b, option_c, option_d, correct_answer)
-            VALUES (?, ?, ?, ?, ?, ?)
-            ''', question)
-        conn.commit()
+        # Insert the questions if the table is empty
+        cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
+        if cursor.fetchone()[0] == 0:
+            for question in questions:
+                cursor.execute(f'''
+                INSERT INTO {table_name} (question_text, option_a, option_b, option_c, option_d, correct_answer)
+                VALUES (?, ?, ?, ?, ?, ?)
+                ''', question)
+            conn.commit()
+    print("Questions inserted successfully.")
+elif again.lower() == "no":
+    print("Operation canceled.")
+else:
+    print("Invalid input. Please enter 'Yes' or 'No'.")
 
+# Close the connection
 conn.close()
